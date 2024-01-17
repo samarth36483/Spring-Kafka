@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 
 public class OrderProducer {
 
@@ -17,7 +18,10 @@ public class OrderProducer {
         ProducerRecord<String, Integer> record = new ProducerRecord<>("OrderTopic", "Mac Book Pro", 10);
         
         try {
-        	producer.send(record);
+        	// its a synchronous send as we are waiting for record metadata
+        	RecordMetadata recordMetadata = producer.send(record).get();
+        	System.out.println(recordMetadata.partition());
+        	System.out.println(recordMetadata.offset());
         	System.out.println("Message sent successfully");
         }
         catch(Exception e) {
